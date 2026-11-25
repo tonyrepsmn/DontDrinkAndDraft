@@ -3,7 +3,7 @@ import { writeFileSync } from 'node:fs';
 const START_IDS = ['1383316903019184128', '1233491700245078016']; // 2023/24/26 chain, 2025 league
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/1PSWJMG-FgRXhDQk5qiYDcTzow9vY27E5eWJ8eRjwjzE/export?format=csv&gid=809196903';
 const REG_WEEKS = 12;
-const OVERRIDES = {}; // if someone changed accounts: { 'oldusername': 'newusername' }
+const OVERRIDES = { visionscn: 'bigdawge108', matt: 'mattlangstrom' }; // merge accounts: { 'oldusername': 'newusername' }
 
 const api = async p => { const r = await fetch('https://api.sleeper.app/v1' + p); if (!r.ok) throw new Error(r.status + ' ' + p); return r.json(); };
 const who = s => { const n = (s || '').trim().replace(/^@/, '').toLowerCase(); return OVERRIDES[n] || n; };
@@ -56,5 +56,6 @@ for (const row of rows) {
   games.push(g);
 }
 
-writeFileSync('data.json', JSON.stringify({ updated: new Date().toISOString(), games }));
-console.log(games.length, 'games written');
+const clean = games.filter(g => g.a !== g.b || (console.warn('Skipped self-matchup', g.s, g.w, g.a), false));
+writeFileSync('data.json', JSON.stringify({ updated: new Date().toISOString(), games: clean }));
+console.log(clean.length, 'games written');
