@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Don't Drink and Draft - League History</title>
+<style>
+:root{--bg:#f6f5f0;--fg:#1c2420;--mut:#66706a;--line:#d9d9d0;--g:#1f5d3a;--gold:#a87a12;--card:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#121816;--fg:#e9ece8;--mut:#98a29b;--line:#2b3631;--g:#6cc08e;--gold:#e0b84a;--card:#1a221f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,sans-serif}
+main{max-width:900px;margin:0 auto;padding:24px 16px 64px}
+h1{font:700 30px/1.15 Georgia,serif;margin:0 0 4px}.sub{color:var(--mut);margin:0 0 20px}
+nav{display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid var(--line);margin-bottom:20px}
+nav button{background:none;border:0;padding:10px 14px;font:inherit;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+nav button[aria-selected=true]{color:var(--g);border-color:var(--g);font-weight:600}
+button:focus-visible,select:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+select{font:inherit;padding:6px 8px;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;margin:0 8px 12px 0}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;background:var(--card)}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-weight:600;color:var(--mut);font-size:13px}td.n,th.n{text-align:right}
+.W{color:var(--g);font-weight:600}.L{color:#b3402f;font-weight:600}.T{color:var(--mut)}.title{color:var(--gold);font-weight:700}
+h2{font:700 20px Georgia,serif;margin:24px 0 8px}
+</style></head><body><main>
+<h1>Don't Drink and Draft</h1><p class="sub" id="sub">Loading league history…</p>
+<nav role="tablist" id="tabs"></nav><div id="view"></div></main>
+<script>
+const TABS=['Leaderboard','Seasons','Head to head','Champions'];
+let G=[],tab=0,sel={season:null,user:null,opp:''};
+const $=id=>document.getElementById(id),at=u=>'@'+u;
+const table=(h,r)=>`<div class="wrap"><table><tr>${h.map(x=>`<th class="${/^[A-Z]/.test(x)&&x!=='User'&&x!=='Season'&&x!=='Opponent'&&x!=='Round'&&x!=='Result'?'n':''}">${x}</th>`).join('')}</tr>${r.map(c=>`<tr>${c.map((x,i)=>`<td class="${i>0&&/^[\d.%-]/.test(String(x).replace(/<[^>]+>/g,''))?'n':''}">${x}</td>`).join('')}</tr>`).join('')}</table></div>`;
+function rec(rows,u){let w=0,l=0,t=0;for(const g of rows){const f=g.a===u?g.pa:g.pb,o=g.a===u?g.pb:g.pa;f>o?w++:f<o?l++:t++}const n=w+l+t;return{w,l,t,n,pct:n?(w+t/2)/n:0}}
+const wl=r=>`${r.w}-${r.l}${r.t?'-'+r.t:''}`;
+const mine=(u,t,s)=>G.filter(g=>(t==='reg'?g.t!=='po':g.t===t)&&(g.a===u||g.b===u)&&(s==null||g.s===s));
+const winner=g=>g.pa>g.pb?g.a:g.pb>g.pa?g.b:null;
+const titles=()=>G.filter(g=>g.w==='Championship').map(g=>({s:g.s,u:winner(g)}));
+const users=()=>[...new Set(G.flatMap(g=>[g.a,g.b]))].filter(u=>u&&u!=='bye').sort();
+function leaderboard(){const T=titles();const rows=users().map(u=>({u,r:rec(mine(u,'reg'),u),p:rec(mine(u,'po'),u),c:T.filter(t=>t.u===u).length})).filter(x=>x.r.n).sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w);
+return table(['User','Reg. season','Win %','Playoffs','Titles'],rows.map(x=>[at(x.u),wl(x.r),(x.r.pct*100).toFixed(1)+'%',wl(x.p),x.c?`<span class="title">${x.c}</span>`:'0']))+`<p class="sub">Sorted by regular season win %, then total wins. Regular season includes each week's result vs the league median. Ties count as half a win.</p>`}
+function seasons(){const S=[...new Set(G.map(g=>g.s))].sort((a,b)=>b-a);sel.season??=S[0];const T=titles();
+const us=users().filter(u=>mine(u,'reg',sel.season).length+mine(u,'po',sel.season).length);
+const rows=us.map(u=>({u,r:rec(mine(u,'reg',sel.season),u),p:rec(mine(u,'po',sel.season),u)})).sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w);
+return `<select id="s" aria-label="Season">${sopts(S)}</select>`+table(['User','Reg. season','Win %','Playoffs',''],rows.map(x=>[at(x.u),wl(x.r),(x.r.pct*100).toFixed(1)+'%',x.p.n?wl(x.p):'-',T.some(t=>t.s===sel.season&&t.u===x.u)?'<span class="title">Champion</span>':'']))}
+const sopts=S=>S.map(s=>`<option${s==sel.season?' selected':''}>${s}</option>`).join('');
+function h2h(){const us=users();sel.user??=us[0];const A=sel.user;const all=G.filter(g=>g.b&&!g.bye&&(g.a===A||g.b===A));
+const opps=[...new Set(all.map(g=>g.a===A?g.b:g.a))].sort();if(sel.opp&&!opps.includes(sel.opp))sel.opp='';
+const vs=o=>all.filter(g=>g.a===o||g.b===o);
+const sum=table(['Opponent','Reg. season','Playoffs'],opps.filter(o=>!sel.opp||o===sel.opp).map(o=>[at(o),wl(rec(vs(o).filter(g=>g.t==='reg'),A)),wl(rec(vs(o).filter(g=>g.t==='po'),A))]));
+const list=all.filter(g=>!sel.opp||vs(sel.opp).includes(g)).sort((a,b)=>b.s-a.s||(a.t<b.t?1:-1)||0).map(g=>{const f=g.a===A?g.pa:g.pb,o=g.a===A?g.pb:g.pa,r=f>o?'W':f<o?'L':'T';return[g.s,g.t==='reg'?'Week '+g.w:g.w,at(g.a===A?g.b:g.a),`${f.toFixed(2)} - ${o.toFixed(2)}`,`<span class="${r}">${r}</span>`]});
+return `<select id="u" aria-label="User">${sopts2(us,A)}</select><select id="o" aria-label="Opponent"><option value="">All opponents</option>${sopts2(opps,sel.opp)}</select>${sum}<h2>Matchups</h2>`+table(['Season','Round','Opponent','Score','Result'],list)}
+const sopts2=(a,v)=>a.map(x=>`<option value="${x}"${x===v?' selected':''}>${at(x)}</option>`).join('');
+function champs(){const T=titles(),c={};T.forEach(t=>c[t.u]=(c[t.u]||[]).concat(t.s));
+const rows=Object.entries(c).sort((a,b)=>b[1].length-a[1].length||Math.min(...a[1])-Math.min(...b[1]));
+return table(['User','Titles','Seasons'],rows.map(([u,s])=>[at(u),`<span class="title">${s.length}</span>`,s.sort().join(', ')]))}
+function render(){$('tabs').innerHTML=TABS.map((t,i)=>`<button role="tab" aria-selected="${i===tab}" data-i="${i}">${t}</button>`).join('');
+$('view').innerHTML=[leaderboard,seasons,h2h,champs][tab]();
+for(const [id,k] of [['s','season'],['u','user'],['o','opp']]){const e=$(id);if(e)e.onchange=()=>{sel[k]=k==='season'?+e.value:e.value;if(k==='user')sel.opp='';render()}}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=+b.dataset.i;render()})}
+fetch('data.json').then(r=>r.json()).then(d=>{G=d.games;$('sub').textContent='All-time league history. Updated '+new Date(d.updated).toLocaleDateString();render()})
+.catch(()=>$('sub').textContent='No data yet. Run "node build-data.mjs" to create data.json.');
+</script></body></html>
