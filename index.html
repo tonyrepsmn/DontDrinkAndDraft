@@ -26,6 +26,7 @@ th,td{padding:11px 14px;text-align:left;white-space:nowrap;border-bottom:1px sol
 tr:last-child td{border:0}tbody tr:hover,tr:hover td{background:rgba(255,79,139,.1)}
 th{font:400 13px Bungee,sans-serif;color:var(--amber)}th button{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
 th button:hover{color:var(--pink)}.n{text-align:right}
+tr.div td,tr.div:hover td{background:var(--bg2);color:var(--mut);font:400 12px Bungee,sans-serif;text-align:left}
 .tag{font-size:12px;background:var(--line);color:var(--mut);border-radius:999px;padding:2px 9px;margin-left:8px}
 .W{color:var(--teal);font-weight:800}.L{color:var(--pink);font-weight:800}.T{color:var(--mut)}
 .bar{height:5px;background:var(--line);border-radius:3px;margin:3px 0 0 auto;width:90px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--amber));border-radius:3px}
@@ -52,11 +53,13 @@ const users=()=>[...new Set(G.flatMap(g=>[g.a,g.b]))].filter(u=>u&&u!=='bye').so
 const pct=p=>`${(p*100).toFixed(1)}%<div class="bar"><i style="width:${p*100}%"></i></div>`;
 const table=(h,r)=>`<div class="wrap"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(c=>`<tr>${c.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table></div>`;
 function stable(i,heads,rows){const s=sort[i];
-rows=[...rows].sort((a,b)=>{const x=a.k[s.k],y=b.k[s.k];return(typeof x==='string'?x.localeCompare(y):x-y)*s.d||b.k[2]-a.k[2]||b.k[1]-a.k[1]});
-return `<div class="wrap"><table><tr>${heads.map((h,j)=>`<th class="${j?'n':''}" aria-sort="${s.k===j?(s.d>0?'ascending':'descending'):'none'}"><button data-s="${i}" data-k="${j}">${h}${s.k===j?(s.d>0?' ▲':' ▼'):''}</button></th>`).join('')}</tr>${rows.map(r=>`<tr>${r.c.map((x,j)=>`<td class="${j?'n':''}">${x}</td>`).join('')}</tr>`).join('')}</table></div>`}
+const cmp=(a,b)=>{const x=a.k[s.k],y=b.k[s.k];return(typeof x==='string'?x.localeCompare(y):x-y)*s.d||b.k[2]-a.k[2]||b.k[1]-a.k[1]};
+const off=rows.filter(r=>INACTIVE.includes(r.k[0])).sort(cmp),act=rows.filter(r=>!INACTIVE.includes(r.k[0])).sort(cmp);
+const tr=r=>`<tr>${r.c.map((x,j)=>`<td class="${j?'n':''}">${x}</td>`).join('')}</tr>`;
+return `<div class="wrap"><table><tr>${heads.map((h,j)=>`<th class="${j?'n':''}" aria-sort="${s.k===j?(s.d>0?'ascending':'descending'):'none'}"><button data-s="${i}" data-k="${j}">${h}${s.k===j?(s.d>0?' ▲':' ▼'):''}</button></th>`).join('')}</tr>${act.map(tr).join('')}${off.length?`<tr class="div"><td colspan="${heads.length}">💤 Inactive players</td></tr>${off.map(tr).join('')}`:''}</table></div>`}
 function leaderboard(){const T=titles();
 const rows=users().map(u=>({u,r:rec(mine(u,'reg'),u),p:rec(mine(u,'po'),u),c:T.filter(t=>t.u===u).length})).filter(x=>x.r.n);
-const rk=[...rows].sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w).map(x=>x.u),M=['🥇','🥈','🥉'];
+const rk=rows.filter(x=>!INACTIVE.includes(x.u)).sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w).map(x=>x.u),M=['🥇','🥈','🥉'];
 return stable(0,['User','Reg. season','Win %','Playoffs','Titles'],rows.map(x=>({k:[x.u,x.r.w,x.r.pct,x.p.w,x.c],c:[(M[rk.indexOf(x.u)]||'')+' '+name(x.u),wl(x.r),pct(x.r.pct),wl(x.p),'🏆'.repeat(x.c)||'-']})))
 +`<p class="note">Click any column to sort. Default order is regular season win %, then total wins. Regular season includes each week's game vs the league median. Ties count as half a win.</p>`}
 function seasons(){const S=[...new Set(G.map(g=>g.s))].sort((a,b)=>b-a);sel.season??=S[0];const T=titles();
