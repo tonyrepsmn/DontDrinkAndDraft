@@ -1,56 +1,82 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Don't Drink and Draft - League History</title>
+<title>Don't Drink and Draft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f5f0;--fg:#1c2420;--mut:#66706a;--line:#d9d9d0;--g:#1f5d3a;--gold:#a87a12;--card:#fff}
-@media(prefers-color-scheme:dark){:root{--bg:#121816;--fg:#e9ece8;--mut:#98a29b;--line:#2b3631;--g:#6cc08e;--gold:#e0b84a;--card:#1a221f}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,sans-serif}
-main{max-width:900px;margin:0 auto;padding:24px 16px 64px}
-h1{font:700 30px/1.15 Georgia,serif;margin:0 0 4px}.sub{color:var(--mut);margin:0 0 20px}
-nav{display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid var(--line);margin-bottom:20px}
-nav button{background:none;border:0;padding:10px 14px;font:inherit;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
-nav button[aria-selected=true]{color:var(--g);border-color:var(--g);font-weight:600}
-button:focus-visible,select:focus-visible{outline:2px solid var(--g);outline-offset:2px}
-select{font:inherit;padding:6px 8px;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;margin:0 8px 12px 0}
-.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;background:var(--card)}
-th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;white-space:nowrap}
-th{font-weight:600;color:var(--mut);font-size:13px}td.n,th.n{text-align:right}
-.W{color:var(--g);font-weight:600}.L{color:#b3402f;font-weight:600}.T{color:var(--mut)}.title{color:var(--gold);font-weight:700}
-h2{font:700 20px Georgia,serif;margin:24px 0 8px}
+:root{--bg:#1d1340;--bg2:#2b1b5e;--ink:#fff7e8;--mut:#b8acd9;--pink:#ff4f8b;--amber:#ffc233;--teal:#34e0c0;--line:#43307f}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.5 Outfit,system-ui,sans-serif;min-height:100vh;background:radial-gradient(900px 520px at 85% -10%,#5a32b8 0,transparent 60%),radial-gradient(700px 400px at 0 100%,#4a1650 0,transparent 60%),var(--bg)}
+main{max-width:960px;margin:0 auto;padding:28px 16px 80px}
+header{text-align:center;padding:8px 0 24px}
+.beer{font-size:42px;letter-spacing:8px;display:inline-block;transform:rotate(-6deg)}
+h1{font:400 clamp(34px,8vw,70px)/1.02 Bungee,Impact,sans-serif;margin:6px 0 10px;color:#ffe3ee;text-shadow:0 0 6px var(--pink),0 0 20px var(--pink),0 0 46px var(--pink);animation:flick 1.8s steps(1) 1}
+@keyframes flick{0%,18%,22%,60%,64%{opacity:1}20%,62%{opacity:.3}}
+@media(prefers-reduced-motion:reduce){h1{animation:none}}
+.sub{color:var(--amber);font-weight:600;margin:0}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}
+button{font:inherit;color:inherit}
+nav button{font-weight:600;background:var(--bg2);border:2px solid var(--line);border-radius:999px;padding:9px 18px;cursor:pointer}
+nav button:hover{border-color:var(--pink)}
+nav button[aria-selected=true]{background:var(--amber);color:#2a1a00;border-color:var(--amber);transform:rotate(-2deg)}
+button:focus-visible,select:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+select{font:inherit;padding:8px 10px;background:var(--bg2);color:var(--ink);border:2px solid var(--line);border-radius:10px;margin:0 8px 14px 0}
+.wrap{overflow-x:auto;border:2px solid var(--line);border-radius:14px;background:rgba(18,8,48,.65)}
+table{border-collapse:collapse;width:100%}
+th,td{padding:11px 14px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+tr:last-child td{border:0}tbody tr:hover,tr:hover td{background:rgba(255,79,139,.1)}
+th{font:400 13px Bungee,sans-serif;color:var(--amber)}th button{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
+th button:hover{color:var(--pink)}.n{text-align:right}
+.tag{font-size:12px;background:var(--line);color:var(--mut);border-radius:999px;padding:2px 9px;margin-left:8px}
+.W{color:var(--teal);font-weight:800}.L{color:var(--pink);font-weight:800}.T{color:var(--mut)}
+.bar{height:5px;background:var(--line);border-radius:3px;margin:3px 0 0 auto;width:90px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--amber));border-radius:3px}
+h2{font:400 20px Bungee,sans-serif;color:var(--teal);margin:26px 0 10px}
+.note{color:var(--mut);font-size:14px;margin-top:12px}
+.champ{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 20px;margin-bottom:12px;border-radius:16px;border:2px solid var(--amber);background:linear-gradient(100deg,rgba(255,194,51,.18),rgba(255,79,139,.12))}
+.cn{font:400 clamp(20px,4vw,28px) Bungee,sans-serif;flex:1 1 220px}.tr{font-size:30px}
+.yr{display:inline-block;background:var(--amber);color:#2a1a00;font:400 14px Bungee,sans-serif;border-radius:8px;padding:3px 10px;margin-left:6px;transform:rotate(-2deg)}
+footer{text-align:center;color:var(--mut);font-size:13px;margin-top:36px}
 </style></head><body><main>
-<h1>Don't Drink and Draft</h1><p class="sub" id="sub">Loading league history…</p>
-<nav role="tablist" id="tabs"></nav><div id="view"></div></main>
+<header><div class="beer">🍺🏈</div><h1>Don't Drink<br>and Draft</h1><p class="sub">Since 2023: bad drafts, worse trades, every score on the record.</p></header>
+<nav role="tablist" id="tabs"></nav><div id="view"></div><footer id="foot"></footer></main>
 <script>
-const TABS=['Leaderboard','Seasons','Head to head','Champions'];
-let G=[],tab=0,sel={season:null,user:null,opp:''};
+const TABS=['Leaderboard','Seasons','Head to head','Champions'],INACTIVE=['mattlangstrom','kfuke'];
+let G=[],tab=0,sel={season:null,user:null,opp:''},sort={0:{k:2,d:-1},1:{k:2,d:-1}};
 const $=id=>document.getElementById(id),at=u=>'@'+u;
-const table=(h,r)=>`<div class="wrap"><table><tr>${h.map(x=>`<th class="${/^[A-Z]/.test(x)&&x!=='User'&&x!=='Season'&&x!=='Opponent'&&x!=='Round'&&x!=='Result'?'n':''}">${x}</th>`).join('')}</tr>${r.map(c=>`<tr>${c.map((x,i)=>`<td class="${i>0&&/^[\d.%-]/.test(String(x).replace(/<[^>]+>/g,''))?'n':''}">${x}</td>`).join('')}</tr>`).join('')}</table></div>`;
+const name=u=>at(u)+(INACTIVE.includes(u)?'<span class="tag">💤 Inactive</span>':'');
 function rec(rows,u){let w=0,l=0,t=0;for(const g of rows){const f=g.a===u?g.pa:g.pb,o=g.a===u?g.pb:g.pa;f>o?w++:f<o?l++:t++}const n=w+l+t;return{w,l,t,n,pct:n?(w+t/2)/n:0}}
 const wl=r=>`${r.w}-${r.l}${r.t?'-'+r.t:''}`;
 const mine=(u,t,s)=>G.filter(g=>(t==='reg'?g.t!=='po':g.t===t)&&(g.a===u||g.b===u)&&(s==null||g.s===s));
 const winner=g=>g.pa>g.pb?g.a:g.pb>g.pa?g.b:null;
-const titles=()=>G.filter(g=>g.w==='Championship').map(g=>({s:g.s,u:winner(g)}));
+const titles=()=>G.filter(g=>g.w==='Championship').map(g=>({s:g.s,u:winner(g)})).filter(t=>t.u);
 const users=()=>[...new Set(G.flatMap(g=>[g.a,g.b]))].filter(u=>u&&u!=='bye').sort();
-function leaderboard(){const T=titles();const rows=users().map(u=>({u,r:rec(mine(u,'reg'),u),p:rec(mine(u,'po'),u),c:T.filter(t=>t.u===u).length})).filter(x=>x.r.n).sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w);
-return table(['User','Reg. season','Win %','Playoffs','Titles'],rows.map(x=>[at(x.u),wl(x.r),(x.r.pct*100).toFixed(1)+'%',wl(x.p),x.c?`<span class="title">${x.c}</span>`:'0']))+`<p class="sub">Sorted by regular season win %, then total wins. Regular season includes each week's result vs the league median. Ties count as half a win.</p>`}
+const pct=p=>`${(p*100).toFixed(1)}%<div class="bar"><i style="width:${p*100}%"></i></div>`;
+const table=(h,r)=>`<div class="wrap"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(c=>`<tr>${c.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table></div>`;
+function stable(i,heads,rows){const s=sort[i];
+rows=[...rows].sort((a,b)=>{const x=a.k[s.k],y=b.k[s.k];return(typeof x==='string'?x.localeCompare(y):x-y)*s.d||b.k[2]-a.k[2]||b.k[1]-a.k[1]});
+return `<div class="wrap"><table><tr>${heads.map((h,j)=>`<th class="${j?'n':''}" aria-sort="${s.k===j?(s.d>0?'ascending':'descending'):'none'}"><button data-s="${i}" data-k="${j}">${h}${s.k===j?(s.d>0?' ▲':' ▼'):''}</button></th>`).join('')}</tr>${rows.map(r=>`<tr>${r.c.map((x,j)=>`<td class="${j?'n':''}">${x}</td>`).join('')}</tr>`).join('')}</table></div>`}
+function leaderboard(){const T=titles();
+const rows=users().map(u=>({u,r:rec(mine(u,'reg'),u),p:rec(mine(u,'po'),u),c:T.filter(t=>t.u===u).length})).filter(x=>x.r.n);
+const rk=[...rows].sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w).map(x=>x.u),M=['🥇','🥈','🥉'];
+return stable(0,['User','Reg. season','Win %','Playoffs','Titles'],rows.map(x=>({k:[x.u,x.r.w,x.r.pct,x.p.w,x.c],c:[(M[rk.indexOf(x.u)]||'')+' '+name(x.u),wl(x.r),pct(x.r.pct),wl(x.p),'🏆'.repeat(x.c)||'-']})))
++`<p class="note">Click any column to sort. Default order is regular season win %, then total wins. Regular season includes each week's game vs the league median. Ties count as half a win.</p>`}
 function seasons(){const S=[...new Set(G.map(g=>g.s))].sort((a,b)=>b-a);sel.season??=S[0];const T=titles();
-const us=users().filter(u=>mine(u,'reg',sel.season).length+mine(u,'po',sel.season).length);
-const rows=us.map(u=>({u,r:rec(mine(u,'reg',sel.season),u),p:rec(mine(u,'po',sel.season),u)})).sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w);
-return `<select id="s" aria-label="Season">${sopts(S)}</select>`+table(['User','Reg. season','Win %','Playoffs',''],rows.map(x=>[at(x.u),wl(x.r),(x.r.pct*100).toFixed(1)+'%',x.p.n?wl(x.p):'-',T.some(t=>t.s===sel.season&&t.u===x.u)?'<span class="title">Champion</span>':'']))}
-const sopts=S=>S.map(s=>`<option${s==sel.season?' selected':''}>${s}</option>`).join('');
+const rows=users().filter(u=>mine(u,'reg',sel.season).length+mine(u,'po',sel.season).length).map(u=>{const r=rec(mine(u,'reg',sel.season),u),p=rec(mine(u,'po',sel.season),u),c=T.some(t=>t.s===sel.season&&t.u===u);
+return{k:[u,r.w,r.pct,p.w,+c],c:[name(u),wl(r),pct(r.pct),p.n?wl(p):'-',c?'🏆 Champion':'']}});
+return `<select id="s" aria-label="Season">${S.map(s=>`<option${s==sel.season?' selected':''}>${s}</option>`).join('')}</select>`+stable(1,['User','Reg. season','Win %','Playoffs','Title'],rows)}
+const uopts=(a,v)=>a.map(x=>`<option value="${x}"${x===v?' selected':''}>${at(x)}</option>`).join('');
 function h2h(){const us=users();sel.user??=us[0];const A=sel.user;const all=G.filter(g=>g.b&&!g.bye&&(g.a===A||g.b===A));
 const opps=[...new Set(all.map(g=>g.a===A?g.b:g.a))].sort();if(sel.opp&&!opps.includes(sel.opp))sel.opp='';
 const vs=o=>all.filter(g=>g.a===o||g.b===o);
-const sum=table(['Opponent','Reg. season','Playoffs'],opps.filter(o=>!sel.opp||o===sel.opp).map(o=>[at(o),wl(rec(vs(o).filter(g=>g.t==='reg'),A)),wl(rec(vs(o).filter(g=>g.t==='po'),A))]));
-const list=all.filter(g=>!sel.opp||vs(sel.opp).includes(g)).sort((a,b)=>b.s-a.s||(a.t<b.t?1:-1)||0).map(g=>{const f=g.a===A?g.pa:g.pb,o=g.a===A?g.pb:g.pa,r=f>o?'W':f<o?'L':'T';return[g.s,g.t==='reg'?'Week '+g.w:g.w,at(g.a===A?g.b:g.a),`${f.toFixed(2)} - ${o.toFixed(2)}`,`<span class="${r}">${r}</span>`]});
-return `<select id="u" aria-label="User">${sopts2(us,A)}</select><select id="o" aria-label="Opponent"><option value="">All opponents</option>${sopts2(opps,sel.opp)}</select>${sum}<h2>Matchups</h2>`+table(['Season','Round','Opponent','Score','Result'],list)}
-const sopts2=(a,v)=>a.map(x=>`<option value="${x}"${x===v?' selected':''}>${at(x)}</option>`).join('');
-function champs(){const T=titles(),c={};T.forEach(t=>c[t.u]=(c[t.u]||[]).concat(t.s));
-const rows=Object.entries(c).sort((a,b)=>b[1].length-a[1].length||Math.min(...a[1])-Math.min(...b[1]));
-return table(['User','Titles','Seasons'],rows.map(([u,s])=>[at(u),`<span class="title">${s.length}</span>`,s.sort().join(', ')]))}
+const sum=table(['Opponent','Reg. season','Playoffs'],opps.filter(o=>!sel.opp||o===sel.opp).map(o=>[name(o),wl(rec(vs(o).filter(g=>g.t==='reg'),A)),wl(rec(vs(o).filter(g=>g.t==='po'),A))]));
+const list=all.filter(g=>!sel.opp||vs(sel.opp).includes(g)).sort((a,b)=>b.s-a.s||(a.t<b.t?1:-1)).map(g=>{const f=g.a===A?g.pa:g.pb,o=g.a===A?g.pb:g.pa,r=f>o?'W':f<o?'L':'T';return[g.s,g.t==='reg'?'Week '+g.w:g.w,name(g.a===A?g.b:g.a),`${f.toFixed(2)} - ${o.toFixed(2)}`,`<span class="${r}">${r}</span>`]});
+return `<select id="u" aria-label="User">${uopts(us,A)}</select><select id="o" aria-label="Opponent"><option value="">All opponents</option>${uopts(opps,sel.opp)}</select>${sum}<h2>Every matchup</h2>`+table(['Season','Round','Opponent','Score','Result'],list)}
+function champs(){const c={};titles().forEach(t=>(c[t.u]??=[]).push(t.s));
+return Object.entries(c).sort((a,b)=>b[1].length-a[1].length||Math.min(...a[1])-Math.min(...b[1])).map(([u,s])=>`<div class="champ"><div class="cn">${name(u)}</div><div class="tr">${'🏆'.repeat(s.length)}</div><div>${s.sort().map(y=>`<span class="yr">${y}</span>`).join('')}</div></div>`).join('')}
 function render(){$('tabs').innerHTML=TABS.map((t,i)=>`<button role="tab" aria-selected="${i===tab}" data-i="${i}">${t}</button>`).join('');
 $('view').innerHTML=[leaderboard,seasons,h2h,champs][tab]();
 for(const [id,k] of [['s','season'],['u','user'],['o','opp']]){const e=$(id);if(e)e.onchange=()=>{sel[k]=k==='season'?+e.value:e.value;if(k==='user')sel.opp='';render()}}
+document.querySelectorAll('th button').forEach(b=>b.onclick=()=>{const s=sort[+b.dataset.s],k=+b.dataset.k;s.d=s.k===k?-s.d:(k?-1:1);s.k=k;render()});
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=+b.dataset.i;render()})}
-fetch('data.json').then(r=>r.json()).then(d=>{G=d.games;$('sub').textContent='All-time league history. Updated '+new Date(d.updated).toLocaleDateString();render()})
-.catch(()=>$('sub').textContent='No data yet. Run "node build-data.mjs" to create data.json.');
+fetch('data.json').then(r=>r.json()).then(d=>{G=d.games;$('foot').textContent='Updated '+new Date(d.updated).toLocaleDateString();render()})
+.catch(()=>$('foot').textContent='No data yet. Run the "Refresh league data" workflow to create data.json.');
 </script></body></html>
