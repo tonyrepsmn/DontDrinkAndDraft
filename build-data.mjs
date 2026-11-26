@@ -20,12 +20,14 @@ for (let id of START_IDS) {
 }
 
 const games = [];
+const state = await api('/state/nfl'); // current NFL season/week
 for (const l of bySeason.values()) {
   const [users, rosters] = await Promise.all([api(`/league/${l.league_id}/users`), api(`/league/${l.league_id}/rosters`)]);
   const uname = Object.fromEntries(users.map(u => [u.user_id, who(u.username || u.display_name)]));
   const owner = Object.fromEntries(rosters.map(r => [r.roster_id, uname[r.owner_id]]));
   const div = Object.fromEntries(rosters.map(r => [r.roster_id, r.settings?.division || 0]));
   for (let w = 1; w <= REG_WEEKS; w++) {
+    if (+l.season === +state.season && w >= state.week) break; // skip the week still in progress
     const groups = {};
     for (const m of await api(`/league/${l.league_id}/matchups/${w}`)) if (m.matchup_id != null) (groups[m.matchup_id] ||= []).push(m);
     const wk = []; // every team's score this week, for the median
