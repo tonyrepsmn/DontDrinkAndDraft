@@ -24,6 +24,7 @@ for (const l of bySeason.values()) {
   const [users, rosters] = await Promise.all([api(`/league/${l.league_id}/users`), api(`/league/${l.league_id}/rosters`)]);
   const uname = Object.fromEntries(users.map(u => [u.user_id, who(u.username || u.display_name)]));
   const owner = Object.fromEntries(rosters.map(r => [r.roster_id, uname[r.owner_id]]));
+  const div = Object.fromEntries(rosters.map(r => [r.roster_id, r.settings?.division || 0]));
   for (let w = 1; w <= REG_WEEKS; w++) {
     const groups = {};
     for (const m of await api(`/league/${l.league_id}/matchups/${w}`)) if (m.matchup_id != null) (groups[m.matchup_id] ||= []).push(m);
@@ -31,7 +32,7 @@ for (const l of bySeason.values()) {
     for (const [x, y] of Object.values(groups).filter(p => p.length === 2)) {
       if (!x.points && !y.points) continue; // unplayed week
       if (!owner[x.roster_id] || !owner[y.roster_id]) { console.warn('Missing owner', l.season, 'week', w); continue; }
-      games.push({ s: +l.season, w, t: 'reg', a: owner[x.roster_id], b: owner[y.roster_id], pa: x.points, pb: y.points });
+      games.push({ s: +l.season, w, t: 'reg', a: owner[x.roster_id], b: owner[y.roster_id], pa: x.points, pb: y.points, d: div[x.roster_id] && div[x.roster_id] === div[y.roster_id] ? 1 : 0 });
       wk.push([owner[x.roster_id], x.points], [owner[y.roster_id], y.points]);
     }
     // Second result each week: vs the league median (a tie if exactly equal).
