@@ -41,6 +41,8 @@ footer{text-align:center;color:var(--mut);font-size:13px;margin-top:36px}
 <nav role="tablist" id="tabs"></nav><div id="view"></div><footer id="foot"></footer></main>
 <script>
 const TABS=['Leaderboard','Seasons','Head to head','Champions'],INACTIVE=['mattlangstrom','kfuke'];
+const DIV_TITLES={2024:['tony5repsmn','mijuzu','bigdawge108','jaketheplumber'],2025:['whitecastlefarts','aidanindy','bigdawge108','kfuke']}; // add each finished season's division winners here
+const divT=u=>Object.values(DIV_TITLES).filter(a=>a.includes(u)).length;
 let G=[],tab=0,sel={season:null,user:null,opp:''},sort={0:{k:2,d:-1},1:{k:2,d:-1}};
 const $=id=>document.getElementById(id),at=u=>'@'+u;
 const name=u=>at(u)+(INACTIVE.includes(u)?'<span class="tag">💤 Inactive</span>':'');
@@ -58,14 +60,14 @@ const off=rows.filter(r=>INACTIVE.includes(r.k[0])).sort(cmp),act=rows.filter(r=
 const tr=r=>`<tr>${r.c.map((x,j)=>`<td class="${j?'n':''}">${x}</td>`).join('')}</tr>`;
 return `<div class="wrap"><table><tr>${heads.map((h,j)=>`<th class="${j?'n':''}" aria-sort="${s.k===j?(s.d>0?'ascending':'descending'):'none'}"><button data-s="${i}" data-k="${j}">${h}${s.k===j?(s.d>0?' ▲':' ▼'):''}</button></th>`).join('')}</tr>${act.map(tr).join('')}${off.length?`<tr class="div"><td colspan="${heads.length}">💤 Inactive players</td></tr>${off.map(tr).join('')}`:''}</table></div>`}
 function leaderboard(){const T=titles();
-const rows=users().map(u=>({u,r:rec(mine(u,'reg'),u),p:rec(mine(u,'po'),u),c:T.filter(t=>t.u===u).length})).filter(x=>x.r.n);
+const rows=users().map(u=>({u,r:rec(mine(u,'reg'),u),d:rec(mine(u,'reg').filter(g=>g.d),u),dt:divT(u),p:rec(mine(u,'po'),u),c:T.filter(t=>t.u===u).length})).filter(x=>x.r.n);
 const rk=rows.filter(x=>!INACTIVE.includes(x.u)).sort((a,b)=>b.r.pct-a.r.pct||b.r.w-a.r.w).map(x=>x.u),M=['🥇','🥈','🥉'];
-return stable(0,['User','Reg. season','Win %','Playoffs','Titles'],rows.map(x=>({k:[x.u,x.r.w,x.r.pct,x.p.w,x.c],c:[(M[rk.indexOf(x.u)]||'')+' '+name(x.u),wl(x.r),pct(x.r.pct),wl(x.p),'🏆'.repeat(x.c)||'-']})))
-+`<p class="note">Click any column to sort. Default order is regular season win %, then total wins. Regular season includes each week's game vs the league median. Ties count as half a win.</p>`}
+return stable(0,['User','Reg. season','Win %','Division','Div. titles','Playoffs','Titles'],rows.map(x=>({k:[x.u,x.r.w,x.r.pct,x.d.w,x.dt,x.p.w,x.c],c:[(M[rk.indexOf(x.u)]||'')+' '+name(x.u),wl(x.r),pct(x.r.pct),x.d.n?wl(x.d):'-','🏅'.repeat(x.dt)||'-',wl(x.p),'🏆'.repeat(x.c)||'-']})))
++`<p class="note">Click any column to sort. Default order is regular season win %, then total wins. Regular season includes each week's game vs the league median. Division is your record against division opponents (divisions started in 2024). 🏅 = division title, 🏆 = league title. Ties count as half a win.</p>`}
 function seasons(){const S=[...new Set(G.map(g=>g.s))].sort((a,b)=>b-a);sel.season??=S[0];const T=titles();
-const rows=users().filter(u=>mine(u,'reg',sel.season).length+mine(u,'po',sel.season).length).map(u=>{const r=rec(mine(u,'reg',sel.season),u),p=rec(mine(u,'po',sel.season),u),c=T.some(t=>t.s===sel.season&&t.u===u);
-return{k:[u,r.w,r.pct,p.w,+c],c:[name(u),wl(r),pct(r.pct),p.n?wl(p):'-',c?'🏆 Champion':'']}});
-return `<select id="s" aria-label="Season">${S.map(s=>`<option${s==sel.season?' selected':''}>${s}</option>`).join('')}</select>`+stable(1,['User','Reg. season','Win %','Playoffs','Title'],rows)}
+const rows=users().filter(u=>mine(u,'reg',sel.season).length+mine(u,'po',sel.season).length).map(u=>{const r=rec(mine(u,'reg',sel.season),u),d=rec(mine(u,'reg',sel.season).filter(g=>g.d),u),p=rec(mine(u,'po',sel.season),u),c=T.some(t=>t.s===sel.season&&t.u===u),dt=(DIV_TITLES[sel.season]||[]).includes(u);
+return{k:[u,r.w,r.pct,d.w,p.w,c*2+dt],c:[name(u),wl(r),pct(r.pct),d.n?wl(d):'-',p.n?wl(p):'-',(dt?'🏅 Division champ ':'')+(c?'🏆 Champion':'')]}});
+return `<select id="s" aria-label="Season">${S.map(s=>`<option${s==sel.season?' selected':''}>${s}</option>`).join('')}</select>`+stable(1,['User','Reg. season','Win %','Division','Playoffs','Title'],rows)}
 const uopts=(a,v)=>a.map(x=>`<option value="${x}"${x===v?' selected':''}>${at(x)}</option>`).join('');
 function h2h(){const us=users();sel.user??=us[0];const A=sel.user;const all=G.filter(g=>g.b&&!g.bye&&(g.a===A||g.b===A));
 const opps=[...new Set(all.map(g=>g.a===A?g.b:g.a))].sort();if(sel.opp&&!opps.includes(sel.opp))sel.opp='';
